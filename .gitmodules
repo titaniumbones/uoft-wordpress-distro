@@ -1,0 +1,3 @@
+[submodule "wp-content/plugins/uoft-helper-functions"]
+	path = wp-content/plugins/uoft-helper-functions
+	url = git@github.com:titaniumbones/uoft-helper-functions.git
