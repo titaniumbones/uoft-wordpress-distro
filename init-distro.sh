@@ -31,8 +31,8 @@ fi
 # fetch and unpack wordpress
 # we can upgrade to wordpress 3.4.1 or latest if we want
 # figure out a way to do it
-#wget -nd http://wordpress.org/wordpress-3.4.tar.gz
-#tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
+wget -nd http://wordpress.org/wordpress-3.4.tar.gz
+tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
 
 
 # fetch and unpack plugins
@@ -58,4 +58,5 @@ cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
 SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
 STRING='put your unique phrase here'
 printf '%s\n' "g/$STRING/d" a "$SALT" . w | ed -s $BASEDIR/wp-config.php
+
 
