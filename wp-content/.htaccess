@@ -1,0 +1,4 @@
+<Files install.php>
+ Order Allow,Deny
+ Deny from all
+</Files>

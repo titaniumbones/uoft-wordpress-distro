@@ -1,0 +1,11 @@
+* University of Toronto Wordpress Distro
+This repository is a skeletal framework that holds a group of wordpress cusotmizations, collected in a simple Wordpress plugin and at least one Wordpress theme.  It also contains a simple bash script, init_distro.sh, that will download and unpack both wordpress and a series of plugins, including especially CCTM -- the Custom Content Type Manager plugin -- on which our own plugin and themes rely heavily.  Finally, it includes a JSON-formatted file containing the definitions for a set of "Custom Post Types" that extend Wordpress's native capabilities in important ways.  
+
+* Installing the Distro 
+To install the distro simply clone this repository (git clone use-the-url-in-the-bar-above), and then cd into the root directory of the repository and run init_distro.sh:
+
+#+BEGIN_SRC
+bash init_distro.sh
+#+END_SRC
+
+The script, which is heavily commented, will download and unpack Wordpress and the other files you need.  There 
