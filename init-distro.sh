@@ -36,17 +36,17 @@ tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
 
 
 # fetch and unpack plugins
-# cd $BASEDIR/wp-content/plugins
+cd $BASEDIR/wp-content/plugins
 
-# for plugin in $PLUGINS; do
-#     #plugin=`echo $plugin | sed 's/,/./g'`".zip"
-#     plugin=${plugin/,/.}".zip"
-#     echo $plugin
-#     #url="http://downloads.wordpress.org/plugin/"$plugin
-#     curl -O  http://downloads.wordpress.org/plugin/$plugin
-#     unzip $plugin 
-#     rm $plugin
-# done
+for plugin in $PLUGINS; do
+    #plugin=`echo $plugin | sed 's/,/./g'`".zip"
+    plugin=${plugin/,/.}".zip"
+    echo $plugin
+    #url="http://downloads.wordpress.org/plugin/"$plugin
+    curl -O  http://downloads.wordpress.org/plugin/$plugin
+    unzip $plugin 
+    rm $plugin
+done
 
 
 # next step: create wp-config.php
