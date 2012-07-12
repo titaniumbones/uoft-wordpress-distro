@@ -50,7 +50,7 @@ tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
 
 
 # next step: create wp-config.php
-cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
+# cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
 
 # then, magic from stackexchange
 # http://stackoverflow.com/a/6233537/1220983
