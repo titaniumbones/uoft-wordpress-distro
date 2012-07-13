@@ -375,6 +375,9 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
 
   foreach ($PLUGINS as $plugin => $version) {
     echo "made it into the plugin loop";
+    // commenting out this complex shit in favour of 
+    // a new function stolen from wp core
+    // works better anyhow and I understand it
     /* $request = new StdClass();
      * $request->slug = stripslashes($plugin);
      * $post_data = array(
@@ -402,16 +405,17 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
   }
 
   // now we need a function that will activate the CCT definitions at startup
-  if (file_exists(WP_PLUGIN_DIR . '/custom-content-manager/index.php') ) {
+  if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
 
-      require_once(WP_PLUGIN_DIR . '/custom-content-manager/index.php');
-      require_once(WP_PLUGIN_DIR . '/custom-content-manager/includes/CCTM_ImportExport.php');
-      $uploads_info = wp_uploads_dir();
-      prdebug("wp_uploads_dir basedir returns " . print_r($uplads_info) );
-      $cctmdefspath = $uploads_info['basedir'] . "cctm/defs/" . $CCTMDEFS;
+      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
+      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
+      $uploads_info = wp_upload_dir();
+      prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
+      $cctmdefspath = $uploads_info['basedir'] . "/cctm/defs/" . $CCTMDEFS;
       
         if (file_exists($cctmdefspath))
         {
+          prdebug("found it");
           CCTM_ImportExport::activate_def($CCTMDEFS);
         }
   }   
