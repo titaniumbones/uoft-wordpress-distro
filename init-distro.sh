@@ -56,7 +56,8 @@ for plugin in $PLUGINS; do
     #url="http://downloads.wordpress.org/plugin/"$plugin
         curl -O  http://downloads.wordpress.org/plugin/$plugin
         unzip $plugin 
-        rm $plugin
+        # add this back in when I'm done testing
+        # rm $plugin
     fi
 done
 

@@ -2,7 +2,7 @@
 
 $DEFAULTPLUGINS=array(
                "custom-content-type-manager" => '0.9.6',
-               "simple-taxonomy" => 'latest',
+               #"simple-taxonomy" => 'latest',
                "all-in-one-event-calendar" => '1.2.5',
                );
 
