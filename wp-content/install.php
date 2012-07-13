@@ -421,7 +421,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
   }   
 
   // and another one to activate uoft, after checking that cctm is active
-  if (is_plugin_active('custom-content-type-manager/index.php') and file_exists('uoft-helper-functions/uoft-helper-functions.php') {
+  if (is_plugin_active('custom-content-type-manager/index.php') and file_exists('uoft-helper-functions/uoft-helper-functions.php') ) {
     run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php');
       }
 
