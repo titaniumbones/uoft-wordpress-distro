@@ -57,6 +57,7 @@ for plugin in $PLUGINS; do
         curl -O  http://downloads.wordpress.org/plugin/$plugin
         unzip $plugin 
         rm $plugin
+    fi
 done
 
 
