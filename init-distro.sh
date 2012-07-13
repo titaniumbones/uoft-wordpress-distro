@@ -31,9 +31,16 @@ fi
 # fetch and unpack wordpress
 # we can upgrade to wordpress 3.4.1 or latest if we want
 # figure out a way to do it
-wget -nd http://wordpress.org/wordpress-3.4.tar.gz
-tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
 
+# allow check for stored files while testing
+STORAGE='/var/www/storage/'
+if [ -e $STORAGE"latest.tar.gz" ] 
+then
+    tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
+else
+    wget -nd http://wordpress.org/wordpress-3.4.tar.gz
+    tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
+fi
 
 # fetch and unpack plugins
 cd $BASEDIR/wp-content/plugins
@@ -42,10 +49,14 @@ for plugin in $PLUGINS; do
     #plugin=`echo $plugin | sed 's/,/./g'`".zip"
     plugin=${plugin/,/.}".zip"
     echo $plugin
+    if [ -e $STORAGE/$plugin ]
+    then
+       unzip $STORAGE/$plugin
+    else
     #url="http://downloads.wordpress.org/plugin/"$plugin
-    curl -O  http://downloads.wordpress.org/plugin/$plugin
-    unzip $plugin 
-    rm $plugin
+        curl -O  http://downloads.wordpress.org/plugin/$plugin
+        unzip $plugin 
+        rm $plugin
 done
 
 
