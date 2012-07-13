@@ -5,12 +5,22 @@
 
 $USERNAME='';
 $USEREMAIL='';
-
+function prdebug ($text) {
+  echo "<p>" . $text .'</p>';
+}
   /** use this file to set your variables, including both   **/
-if (file_exists('../wp-content/uot-vars.php') {
-    require_once('../wp-content/uot-vars.php');
+  if (file_exists(ABSPATH . '/wp-content/uot-vars.php') ) {
+    require_once(ABSPATH . '/wp-content/uot-vars.php');
   } 
+$PLUGINS=array(
+               "custom-content-type-manager" => '0.9.6',
+               "simple-taxonomy" => 'latest',
+               "all-in-one-event-calendar" => '1.2.5',
+               );
 
+    // trying to fix an error 
+    require_once(ABSPATH . 'wp-load.php');
+    require_once(ABSPATH .'wp-admin/includes/plugin.php');
 
 /**
  * Replaces the built-in wp_install_defaults from upgrades.php
@@ -24,13 +34,16 @@ if (file_exists('../wp-content/uot-vars.php') {
  */
 function wp_install_defaults($user_id) {
 	global $wpdb, $wp_rewrite, $current_site, $table_prefix;
-
+    
     /** TWEAKS BEGINNING HERE
      * Customizing various options
      * thanks KIA
      **/
+
+
     // Set Timezone
  
+
     //$timezone = "America/New_York";
     $timezone = "America/Toronto";
     //$timezone = "America/Denver";
@@ -91,22 +104,23 @@ function wp_install_defaults($user_id) {
      * being shared among blogs. Just set the role in that case.
      */
     // only do this if we have a USERNAME set
-    if (isset($USERNAME)) {
-      $self_id = username_exists($USERNAME);
-      if ( !$self_id ) {
-        $user_password = wp_generate_password( 12, false );
-        $self_id = wp_create_user($USERNAME, $user_password, $USEREMAIL.'<script type="text/javascript">
-/* <![CDATA[ */
-(function(){try{var s,a,i,j,r,c,l=document.getElementById("__cf_email__");a=l.className;if(a){s='';r=parseInt(a.substr(0,2),16);for(j=2;a.length-j;j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}s=document.createTextNode(s);l.parentNode.replaceChild(s,l);}}catch(e){}})();
-/* ]]> */
-</script>');
-        update_user_option($self_id, 'default_password_nag', true, true);
-        wp_new_user_notification( $self_id, $self_password );
-      }
+    // some kind of syntax error here, fix later
+/*     if (isset($USERNAME)) {
+ *       $self_id = username_exists($USERNAME);
+ *       if ( !$self_id ) {
+ *         $user_password = wp_generate_password( 12, false );
+ *         $self_id = wp_create_user($USERNAME, $user_password, $USEREMAIL.'<script type="text/javascript">
+ * /\* <![CDATA[ *\/
+ * (function(){try{var s,a,i,j,r,c,l=document.getElementById("__cf_email__");a=l.className;if(a){s='';r=parseInt(a.substr(0,2),16);for(j=2;a.length-j;j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}s=document.createTextNode(s);l.parentNode.replaceChild(s,l);}}catch(e){}})();
+ * /\* ]]> *\/
+ * </script>');
+ *         update_user_option($self_id, 'default_password_nag', true, true);
+ *         wp_new_user_notification( $self_id, $self_password );
+ *       } */
  
-      $self = new WP_User($self_id);
-      $self->set_role('administrator');
-    }
+    /*   $self = new WP_User($self_id);
+     *   $self->set_role('administrator');
+     * } */
     /*
      * END TWEAKS
      */
@@ -307,7 +321,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
 		$wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'capabilities') );
 
 		// Delete any caps that snuck into the previously active blog. (Hardcoded to blog 1 for now.) TODO: Get previous_blog_id.
-		if ( !is_super_admin( $user_id ) && $user_id != 1 )
+		if ( !is_super_admin( $user_id ) && $user_id != 1 ) {
 			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id , 'meta_key' => $wpdb->base_prefix.'1_capabilities' ) );
 	}
 }
@@ -325,45 +339,86 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
     do_action( 'activated_plugin', trim( $plugin) );
   }
   
+  // this code, stolen from wp-admin/includes/plugin.php get_plugins
+  // should help to identify the main plugin file in each plugin
+  function get_plugin_file( $plugin ) {
+    $plugin_dir = @ opendir (WP_PLUGIN_DIR . '/' . $plugin );
+    prdebug("plugin dir is " . WP_PLUGIN_DIR . '/' . $plugin ); 
+    if (  $plugin_dir ) {
+      while (($file = readdir ( $plugin_dir ) ) !== false ) {
+        prdebug("checking file  " . $file); 
+
+        if ( substr($file, 0, 1) == '.' )
+          continue;
+        if ( substr($file, -4) == '.php' ) {
+          prdebug("checking plugin data for " . $file );
+          $plugin_data = get_plugin_data( WP_PLUGIN_DIR . "/$plugin/$file", false, false ); 
+          prdebug("plug data returns " . print_r ($plugin_data) );
+          if ( ! empty ($plugin_data['Name'] ) ) {
+            echo "<p>returning plugin file as " . $plugin . '/' . $file . "</p>";
+            return ($plugin . '/' . $file );
+          }
+        }
+      }
+      closedir( $plugin_dir );
+    }
+
+        
+  }
   // this queries the wordpress plugin database to get the right URL for each plugin
   // hopefully it works.  
+  echo "about to loop through plugins";
+  $PLUGINS=array(
+               "custom-content-type-manager" => '0.9.6',
+               "all-in-one-event-calendar" => '1.2.5',
+               );
+
   foreach ($PLUGINS as $plugin => $version) {
-    $request = new StdClass();
-    $request->slug = stripslashes($plugin);
-    $post_data = array(
-                       'action' => 'plugin_information', 
-                       'request' => serialize($request)
-                       );
-    $options = array(
-                     CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
-                     CURLOPT_POST => true,
-                     CURLOPT_POSTFIELDS => $post_data,
-                     CURLOPT_RETURNTRANSFER => true
-                     );
-    $handle = curl_init();
-    curl_setopt_array($handle, $options);
-    $response = curl_exec($handle);
-    curl_close($handle);
-    $plugin_info = unserialize($response);
-    $daplugins = get_plugins( '/' . $plugin_info->slug );
-    $paths = array_keys($daplugins);
-    $plugin_file = $plugin_info->slug . '/' . $paths[0];
-    run_activate_plugin($plugin_file);
+    echo "made it into the plugin loop";
+    /* $request = new StdClass();
+     * $request->slug = stripslashes($plugin);
+     * $post_data = array(
+     *                    'action' => 'plugin_information', 
+     *                    'request' => serialize($request)
+     *                    );
+     * $options = array(
+     *                  CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
+     *                  CURLOPT_POST => true,
+     *                  CURLOPT_POSTFIELDS => $post_data,
+     *                  CURLOPT_RETURNTRANSFER => true
+     *                  );
+     * $handle = curl_init();
+     * curl_setopt_array($handle, $options);
+     * $response = curl_exec($handle);
+     * curl_close($handle);
+     * $plugin_info = unserialize($response);
+     * $daplugins = get_plugins( '/' . $plugin_info->slug );
+     * $paths = array_keys($daplugins);
+     * $plugin_file = $plugin_info->slug . '/' . $paths[0]; */
+    $plugin_file = get_plugin_file ($plugin);
+    if (! empty ($plugin_file) ) {
+      run_activate_plugin($plugin_file);
+    }
   }
 
   // now we need a function that will activate the CCT definitions at startup
-  if (file_exists(WP_PLUGIN_DIR . 'custom-content-manager/index.php') {
-      require_once(WP_PLUGIN_DIR . 'custom-content-manager/index.php');
-      require_once(WP_PLUGIN_DIR . 'custom-content-manager/includes/CCTM_ImportExport.php');
+  if (file_exists(WP_PLUGIN_DIR . '/custom-content-manager/index.php') ) {
+
+      require_once(WP_PLUGIN_DIR . '/custom-content-manager/index.php');
+      require_once(WP_PLUGIN_DIR . '/custom-content-manager/includes/CCTM_ImportExport.php');
       $uploads_info = wp_uploads_dir();
-      $cctmdefspath = $uploads_info['basedir'] . "cctm/defs/" . $CCTMDEFS
+      prdebug("wp_uploads_dir basedir returns " . print_r($uplads_info) );
+      $cctmdefspath = $uploads_info['basedir'] . "cctm/defs/" . $CCTMDEFS;
+      
         if (file_exists($cctmdefspath))
         {
           CCTM_ImportExport::activate_def($CCTMDEFS);
         }
-      
+  }   
 
   // and another one to activate uoft, after checking that cctm is active
   if (is_plugin_active('custom-content-type-manager/index.php')) {
-    run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php')
+    run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php');
       }
+
+}

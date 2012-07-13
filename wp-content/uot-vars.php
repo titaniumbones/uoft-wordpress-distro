@@ -16,5 +16,4 @@ $PLUGINS=array(
                );
 
 // cctm file
-$CCTMDEFS='historydepartmentjune2012.cctm.json'
-
+$CCTMDEFS='historydepartmentjune2012.cctm.json';
