@@ -1,6 +1,7 @@
 [submodule "wp-content/plugins/uoft-helper-functions"]
 	path = wp-content/plugins/uoft-helper-functions
-	url = git@github.com:titaniumbones/uoft-helper-functions.git
+	#url = git@github.com:titaniumbones/uoft-helper-functions.git
+    url = https://github.com/titaniumbones/uoft-helper-functions.git
 [submodule "wp-content/themes/atahualpa-matts-mods"]
 	path = wp-content/themes/atahualpa-matts-mods
-	url = git@github.com:titaniumbones/atahualpa-matts-mods.git
+	url = https://github.com/titaniumbones/atahualpa-matts-mods.git
