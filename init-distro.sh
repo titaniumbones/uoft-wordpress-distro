@@ -7,7 +7,8 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # pull in submodules
 # currently atahualpa-matts-mods, uot-helper-functions
 git submodule init
-git submodule update
+git submodule update  --init --recursive
+
 
 # initialize list of plugins for later use
 # this is a quasi-two-dimensional array that
