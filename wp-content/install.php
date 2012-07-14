@@ -9,15 +9,19 @@ function prdebug ($text) {
   echo "<p>" . $text .'</p>';
 }
   /** use this file to set your variables, including both   **/
-  if (file_exists(ABSPATH . '/wp-content/uot-vars.php') ) {
-    require_once(ABSPATH . '/wp-content/uot-vars.php');
-  } 
-$PLUGINS=array(
+  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
+    prdebug("uotvars exists");
+    include(ABSPATH . 'wp-content/uot-vars.php');
+      prdebug ("cctmedfs is " . $CCTMDEFS );
+
+  } else {
+    prdebug("had to load manually for some reason");
+    $CCTMDEFS='historydepartmentjune2012.cctm.json';
+    $PLUGINS=array(
                "custom-content-type-manager" => '0.9.6',
-               "simple-taxonomy" => 'latest',
                "all-in-one-event-calendar" => '1.2.5',
                );
-
+  }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
@@ -39,6 +43,24 @@ function wp_install_defaults($user_id) {
      * Customizing various options
      * thanks KIA
      **/
+  /** use this file to set your variables, including both   **/
+  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
+    prdebug("uotvars exists");
+    include(ABSPATH . 'wp-content/uot-vars.php');
+      prdebug ("cctmedfs is " . $CCTMDEFS );
+
+  } else {
+    prdebug("had to load manually for some reason");
+    $CCTMDEFS='historydepartmentjune2012.cctm.json';
+    $PLUGINS=array(
+               "custom-content-type-manager" => '0.9.6',
+               "all-in-one-event-calendar" => '1.2.5',
+               );
+  }
+    // trying to fix an error 
+    require_once(ABSPATH . 'wp-load.php');
+    require_once(ABSPATH .'wp-admin/includes/plugin.php');
+
 
 
     // Set Timezone
@@ -365,46 +387,21 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
 
         
   }
-  // this queries the wordpress plugin database to get the right URL for each plugin
-  // hopefully it works.  
-  echo "about to loop through plugins";
-  $PLUGINS=array(
-               "custom-content-type-manager" => '0.9.6',
-               "all-in-one-event-calendar" => '1.2.5',
-               );
+  /* $PLUGINS=array(
+   *              "custom-content-type-manager" => '0.9.6',
+   *              "all-in-one-event-calendar" => '1.2.5',
+   *              ); */
 
   foreach ($PLUGINS as $plugin => $version) {
     echo "made it into the plugin loop";
-    // commenting out this complex shit in favour of 
-    // a new function stolen from wp core
-    // works better anyhow and I understand it
-    /* $request = new StdClass();
-     * $request->slug = stripslashes($plugin);
-     * $post_data = array(
-     *                    'action' => 'plugin_information', 
-     *                    'request' => serialize($request)
-     *                    );
-     * $options = array(
-     *                  CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
-     *                  CURLOPT_POST => true,
-     *                  CURLOPT_POSTFIELDS => $post_data,
-     *                  CURLOPT_RETURNTRANSFER => true
-     *                  );
-     * $handle = curl_init();
-     * curl_setopt_array($handle, $options);
-     * $response = curl_exec($handle);
-     * curl_close($handle);
-     * $plugin_info = unserialize($response);
-     * $daplugins = get_plugins( '/' . $plugin_info->slug );
-     * $paths = array_keys($daplugins);
-     * $plugin_file = $plugin_info->slug . '/' . $paths[0]; */
     $plugin_file = get_plugin_file ($plugin);
     if (! empty ($plugin_file) ) {
       run_activate_plugin($plugin_file);
     }
   }
 
-  // now we need a function that will activate the CCT definitions at startup
+
+  // now we need to activate the CCT definitions at startup
   if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
 
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
@@ -415,8 +412,10 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
       
         if (file_exists($cctmdefspath))
         {
-          prdebug("found it");
-          CCTM_ImportExport::activate_def($CCTMDEFS);
+          prdebug("found it" . $cctmdefspath);
+          // CCTM_ImportExport::activate_def($CCTMDEFS);
+          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
+          CCTM_ImportExport::activate_def('historydepartmentjune2012.cctm.json');
         }
   }   
 
@@ -425,4 +424,93 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
     run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php');
       }
 
+}
+
+/**
+ * Installs the blog
+ *
+ * {@internal Missing Long Description}}
+ *
+ * @since 2.1.0
+ *
+ * @param string $blog_title Blog title.
+ * @param string $user_name User's username.
+ * @param string $user_email User's email.
+ * @param bool $public Whether blog is public.
+ * @param null $deprecated Optional. Not used.
+ * @param string $user_password Optional. User's chosen password. Will default to a random password.
+ * @return array Array keys 'url', 'user_id', 'password', 'password_message'.
+ */
+function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated = '', $user_password = '' ) {
+	if ( !empty( $deprecated ) )
+		_deprecated_argument( __FUNCTION__, '2.6' );
+
+	wp_check_mysql_version();
+	wp_cache_flush();
+	make_db_current_silent();
+	populate_options();
+	populate_roles();
+
+	update_option('blogname', $blog_title);
+	update_option('admin_email', $user_email);
+	update_option('blog_public', $public);
+
+	$guessurl = wp_guess_url();
+
+	update_option('siteurl', $guessurl);
+
+	// If not a public blog, don't ping.
+	if ( ! $public )
+		update_option('default_pingback_flag', 0);
+
+	// Create default user. If the user already exists, the user tables are
+	// being shared among blogs. Just set the role in that case.
+	$user_id = username_exists($user_name);
+	$user_password = trim($user_password);
+	$email_password = false;
+	if ( !$user_id && empty($user_password) ) {
+		$user_password = wp_generate_password( 12, false );
+		$message = __('<strong><em>Note that password</em></strong> carefully! It is a <em>random</em> password that was generated just for you.');
+		$user_id = wp_create_user($user_name, $user_password, $user_email);
+		update_user_option($user_id, 'default_password_nag', true, true);
+		$email_password = true;
+	} else if ( !$user_id ) {
+		// Password has been provided
+		$message = '<em>'.__('Your chosen password.').'</em>';
+		$user_id = wp_create_user($user_name, $user_password, $user_email);
+	} else {
+		$message = __('User already exists. Password inherited.');
+	}
+
+	$user = new WP_User($user_id);
+	$user->set_role('administrator');
+
+	wp_install_defaults($user_id);
+
+	flush_rewrite_rules();
+
+	wp_new_blog_notification($blog_title, $guessurl, $user_id, ($email_password ? $user_password : __('The password you chose during the install.') ) );
+
+	wp_cache_flush();
+
+  // now we need to activate the CCT definitions at startup
+  if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
+
+      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
+      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
+      $uploads_info = wp_upload_dir();
+      prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
+      $cctmdefspath = $uploads_info['basedir'] . "/cctm/defs/" . $CCTMDEFS;
+      
+        if (file_exists($cctmdefspath))
+        {
+          prdebug("found it SECOND TIME" . $cctmdefspath);
+          // CCTM_ImportExport::activate_def($CCTMDEFS);
+          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
+          CCTM_ImportExport::activate_def('historydepartmentjune2012.cctm.json');
+        }
+  }   
+
+
+	return array('url' => $guessurl, 'user_id' => $user_id, 'password' => $user_password, 'password_message' => $message);
 }
