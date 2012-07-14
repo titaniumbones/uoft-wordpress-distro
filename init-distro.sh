@@ -16,6 +16,7 @@ git submodule update  --init --recursive
 # the format that will be used to grap the zipball 
 # from wordpress.org
 # really we only use it to find a tarball
+# but in install.php that list is fed to wordpress itself.
 
 TRANS="$BASEDIR/var-translator.php"
 if [ -e "$TRANS" ]
@@ -30,10 +31,12 @@ fi
 
 
 # fetch and unpack wordpress
-# we can upgrade to wordpress 3.4.1 or latest if we want
-# figure out a way to do it
+# currently fetching latest
+# which is 3.4.1 in july 2012.  May want to revert to this
+# earlier version if things start breaking later on
 
-# allow check for stored files while testing
+# allow check for stored files during development
+# later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
 if [ -e $STORAGE"latest.tar.gz" ] 
 then
@@ -68,12 +71,13 @@ cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
 
 # then, magic from stackexchange
 # http://stackoverflow.com/a/6233537/1220983
-
+# use ed to edit directly
 SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
 STRING='put your unique phrase here'
 printf '%s\n' "g/$STRING/d" a "$SALT" . w | ed -s $BASEDIR/wp-config.php
 
-echo -e "define('WP_SITEURL', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
-echo -e "define('WP_HOME', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
+# a fix for a different problem -- gonna getrid of these.
+# echo -e "define('WP_SITEURL', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
+# echo -e "define('WP_HOME', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
 
 

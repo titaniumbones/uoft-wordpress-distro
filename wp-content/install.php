@@ -3,25 +3,9 @@
   // set these defaults before proceeding!!
   // I should write a sed script to do that, in fact
 
-$USERNAME='';
-$USEREMAIL='';
 function prdebug ($text) {
   echo "<p>" . $text .'</p>';
 }
-  /** use this file to set your variables, including both   **/
-  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
-    prdebug("uotvars exists");
-    include(ABSPATH . 'wp-content/uot-vars.php');
-      prdebug ("cctmedfs is " . $CCTMDEFS );
-
-  } else {
-    prdebug("had to load manually for some reason");
-    $CCTMDEFS='historydepartmentjune2012.cctm.json';
-    $PLUGINS=array(
-               "custom-content-type-manager" => '0.9.6',
-               "all-in-one-event-calendar" => '1.2.5',
-               );
-  }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
@@ -47,7 +31,7 @@ function wp_install_defaults($user_id) {
   if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
     prdebug("uotvars exists");
     include(ABSPATH . 'wp-content/uot-vars.php');
-      prdebug ("cctmedfs is " . $CCTMDEFS );
+      prdebug ("username is " . $USERNAME );
 
   } else {
     prdebug("had to load manually for some reason");
@@ -56,6 +40,9 @@ function wp_install_defaults($user_id) {
                "custom-content-type-manager" => '0.9.6',
                "all-in-one-event-calendar" => '1.2.5',
                );
+    $USERNAME='matt';
+    $USEREMAIL='moptop99@gmail.com';
+
   }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
@@ -127,22 +114,18 @@ function wp_install_defaults($user_id) {
      */
     // only do this if we have a USERNAME set
     // some kind of syntax error here, fix later
-/*     if (isset($USERNAME)) {
- *       $self_id = username_exists($USERNAME);
- *       if ( !$self_id ) {
- *         $user_password = wp_generate_password( 12, false );
- *         $self_id = wp_create_user($USERNAME, $user_password, $USEREMAIL.'<script type="text/javascript">
- * /\* <![CDATA[ *\/
- * (function(){try{var s,a,i,j,r,c,l=document.getElementById("__cf_email__");a=l.className;if(a){s='';r=parseInt(a.substr(0,2),16);for(j=2;a.length-j;j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}s=document.createTextNode(s);l.parentNode.replaceChild(s,l);}}catch(e){}})();
- * /\* ]]> *\/
- * </script>');
- *         update_user_option($self_id, 'default_password_nag', true, true);
- *         wp_new_user_notification( $self_id, $self_password );
- *       } */
+    if (isset($USERNAME)) {
+        $self_id = username_exists($USERNAME);
+        if ( !$self_id ) {
+          $user_password = wp_generate_password( 12, false );
+          $self_id = wp_create_user($USERNAME, $user_password, $USEREMAIL);
+          update_user_option($self_id, 'default_password_nag', true, true);
+          wp_new_user_notification( $self_id, $self_password );
+        }
  
-    /*   $self = new WP_User($self_id);
-     *   $self->set_role('administrator');
-     * } */
+      $self = new WP_User($self_id);
+      $self->set_role('administrator');
+    }
     /*
      * END TWEAKS
      */
