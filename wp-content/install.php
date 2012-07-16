@@ -177,18 +177,8 @@ function wp_install_defaults($user_id) {
 								'link_rss' => '',
 								'link_notes' => '');
 
-	$default_links[] = array(	'link_url' => __( 'http://wordpress.org/news/' ),
-								'link_name' => __( 'WordPress Blog' ),
-								'link_rss' => __( 'http://wordpress.org/news/feed/' ),
-								'link_notes' => '');
-
 	$default_links[] = array(	'link_url' => __( 'http://wordpress.org/support/' ),
 								'link_name' => _x( 'Support Forums', 'default link' ),
-								'link_rss' => '',
-								'link_notes' =>'');
-
-	$default_links[] = array(	'link_url' => 'http://wordpress.org/extend/plugins/',
-								'link_name' => _x( 'Plugins', 'Default link to wordpress.org/extend/plugins/' ),
 								'link_rss' => '',
 								'link_notes' =>'');
 
@@ -199,11 +189,6 @@ function wp_install_defaults($user_id) {
 
 	$default_links[] = array(	'link_url' => __( 'http://wordpress.org/support/forum/requests-and-feedback' ),
 								'link_name' => __( 'Feedback' ),
-								'link_rss' => '',
-								'link_notes' =>'');
-
-	$default_links[] = array(	'link_url' => __( 'http://planet.wordpress.org/' ),
-								'link_name' => __( 'WordPress Planet' ),
 								'link_rss' => '',
 								'link_notes' =>'');
 
@@ -331,7 +316,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
 	}
 }
   // more mods -- activate plugins
-  // this stuff stolen from wordpress pachage maker (see KIA post above)
+  // this stuff stolen from wordpress package maker (see KIA post above)
   // this function activates plugins somewhat more carefully than I would
   function run_activate_plugin( $plugin ) {
     $current = get_option( 'active_plugins' );
@@ -348,10 +333,10 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
   // should help to identify the main plugin file in each plugin
   function get_plugin_file( $plugin ) {
     $plugin_dir = @ opendir (WP_PLUGIN_DIR . '/' . $plugin );
-    prdebug("plugin dir is " . WP_PLUGIN_DIR . '/' . $plugin ); 
+    //prdebug("plugin dir is " . WP_PLUGIN_DIR . '/' . $plugin ); 
     if (  $plugin_dir ) {
       while (($file = readdir ( $plugin_dir ) ) !== false ) {
-        prdebug("checking file  " . $file); 
+        //prdebug("checking file  " . $file); 
 
         if ( substr($file, 0, 1) == '.' )
           continue;
