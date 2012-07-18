@@ -10,6 +10,73 @@ function prdebug ($text) {
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
 
+
+function matt_download_plugin($plugin) {
+  $request = new StdClass();
+  
+  $request->slug = stripslashes($plugin);
+  $post_data = array(
+                     'action' => 'plugin_information', 
+                     'request' => serialize($request)
+                     );
+  $options = array(
+                   CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
+                   CURLOPT_POST => true,
+                   CURLOPT_POSTFIELDS => $post_data,
+                   CURLOPT_RETURNTRANSFER => true
+                   );
+  $handle = curl_init();
+  curl_setopt_array($handle, $options);
+  $response = curl_exec($handle);
+  curl_close($handle);
+  $plugin_info = unserialize($response);
+  echo "Downloading and Extracting $plugin_info->name<br />";
+  //prdebug("plugin info is " .  print_r($plugin_info));
+  prdebug("download link is  " . $plugin_info->download_link);
+
+  $file = basename($plugin_info->download_link);
+
+  $fp = fopen($file,'w');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_USERAGENT, 'WPKGR');
+  curl_setopt($ch, CURLOPT_URL, $plugin_info->download_link);
+  curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+  curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+  curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+  curl_setopt($ch, CURLOPT_FILE, $fp);
+  $b = curl_exec($ch);
+
+  if (!$b) {
+    $message = 'Download error: '. curl_error($ch) .', please try again';
+    curl_close($ch);
+    throw new Exception($message);
+  }
+
+  fclose($fp);
+
+  if (!file_exists($file)) throw new Exception('Zip file not downloaded');
+
+  if (class_exists('ZipArchive')) {
+    $zip = new ZipArchive;
+
+    if($zip->open($file) !== TRUE) throw new Exception('Unable to open Zip file');
+
+    $zip->extractTo(ABSPATH . 'wp-content/plugins/');
+
+    $zip->close();
+  }
+  else {
+    // try unix shell command
+    @shell_exec('unzip -d ../wp-content/plugins/ '. $file);
+  }
+  unlink($file);
+  echo "<strong>Done!</strong><br />";
+}
+
 /**
  * Replaces the built-in wp_install_defaults from upgrades.php
  *
@@ -361,7 +428,8 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
    *              ); */
 
   foreach ($PLUGINS as $plugin => $version) {
-    echo "made it into the plugin loop";
+    echo "made it into the plugin loop for " . $plugin ;
+    matt_download_plugin($plugin);
     $plugin_file = get_plugin_file ($plugin);
     if (! empty ($plugin_file) ) {
       run_activate_plugin($plugin_file);
@@ -393,6 +461,9 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
       }
 
 }
+
+
+
 
 /**
  * Installs the blog

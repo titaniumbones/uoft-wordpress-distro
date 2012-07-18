@@ -8,4 +8,17 @@ To install the distro simply clone this repository (git clone use-the-url-in-the
 bash init_distro.sh
 #+END_SRC
 
-The script, which is heavily commented, will download and unpack Wordpress and the other files you need.  There 
+The script, which is heavily commented, will download and unpack Wordpress as well as the plugins specified in the file wp-content/uot-vars.php.  During the install process, all of the plugins will be activated, and the custom content type definitions activated (can't load them on install time yet -- don't understand why not!).  
+
+* Files and Functions
+- init-distro.sh:  This bash script will get all the git submodules (a simple, poorly-written plugin with helper functions, and a similarly poorly-written theme), download wordpress as well as the plugins listed in wp-content/uotvars.php, and add secret keys to  wp-config.php.  
+- wp-content/uotvars.php:  keeps variables we will need later in the install process.  YOU MUST MODIFY THIS FILE BEFORE RUNNING init-distro.sh !!  
+- wp-content/var-translator.php: allows the php arrays in uotvars.php to be used by init-disro.sh.  Ensures that install.php and init-distro.php get the same set of plugins.
+- wp-content/install.php:  overwrites the wp builtin function wp_install_defaults to install a more reasonable feature set on initialization.  
+
+* Automating Apache setup, cloning for multiple sites
+If you want even more automation, try modifying the simple bash script [[https://gist.github.com/d4b6fa56d1e082002f22][here]].  
+
+* Help me out!
+This is a primitive work-in-progress by a second-rate coder.  If you're interested in helping out, I welcome contributions -- please add issues t [[https://github.com/titaniumbones/uoft-wordpress-distro/issues][the github issue queue]] or clone the [[https://github.com/titaniumbones/uoft-wordpress-distro][repo]] and submit a pull request.  Thanks!
+
