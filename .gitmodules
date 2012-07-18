@@ -2,9 +2,6 @@
 	path = wp-content/plugins/uoft-helper-functions
 	#url = git@github.com:titaniumbones/uoft-helper-functions.git
     url = https://github.com/titaniumbones/uoft-helper-functions.git
-[submodule "wp-content/themes/atahualpa-matts-mods"]
-	path = wp-content/themes/atahualpa-matts-mods
-	url = https://github.com/titaniumbones/atahualpa-matts-mods.git
 [submodule "wp-content/themes/twentyeleven-hh-child"]
 	path = wp-content/themes/twentyeleven-hh-child
 	url = https://github.com/titaniumbones/twentyeleven-hh-child.git
