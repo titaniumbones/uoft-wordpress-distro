@@ -2,12 +2,9 @@
 	path = wp-content/plugins/uoft-helper-functions
 	#url = git@github.com:titaniumbones/uoft-helper-functions.git
     url = https://github.com/titaniumbones/uoft-helper-functions.git
-[submodule "wp-content/themes/twentyeleven-hh-child"]
-	path = wp-content/themes/twentyeleven-hh-child
-	url = https://github.com/titaniumbones/twentyeleven-hh-child.git
-[submodule "wp-content/themes/twentyten-hh-child"]
-	path = wp-content/themes/twentyten-hh-child
-	url = https://github.com/titaniumbones/twentyten-hh-child.git
 [submodule "wp-content/themes/wordpress-learning-theme"]
 	path = wp-content/themes/wordpress-learning-theme
 	url = https://github.com/titaniumbones/wordpress-learning-theme.git
+[submodule "wp-content/themes/twentytwelve-hh-child"]
+	path = wp-content/themes/twentytwelve-hh-child
+	url = git@github.com:titaniumbones/Twenty-Twelve-Child.git
