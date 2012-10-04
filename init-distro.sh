@@ -38,12 +38,15 @@ fi
 # allow check for stored files during development
 # later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
+if [  -e $STORAGE ]
+STORAGE=$PWD
+
 if [ -e $STORAGE"latest.tar.gz" ] 
 then
     tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
 else
-    wget -nd http://wordpress.org/wordpress-3.4.tar.gz
-    tar  -xzvf  wordpress-3.4.tar.gz --strip=1 --show-transformed
+    wget -nd -P $STORAGE  http://wordpress.org/latest.tar.gz
+    tar  -xzvf  $STORAGE/latest.tar.gz --strip=1 --show-transformed
 fi
 
 # fetch and unpack plugins
@@ -58,8 +61,8 @@ for plugin in $PLUGINS; do
        unzip $STORAGE/$plugin
     else
     #url="http://downloads.wordpress.org/plugin/"$plugin
-        curl -O  http://downloads.wordpress.org/plugin/$plugin
-        unzip $plugin 
+        wget -and -P $STORAGE  http://downloads.wordpress.org/plugin/$plugin
+        unzip $STORAGE$plugin 
         # add this back in when I'm done testing
         # rm $plugin
     fi
