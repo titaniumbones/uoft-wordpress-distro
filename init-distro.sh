@@ -40,7 +40,7 @@ fi
 STORAGE='/var/www/storage/'
 if [  -e $STORAGE ]
 STORAGE=$PWD
-
+echo "looking for " $STORAGE "latest.tar.gz"
 if [ -e $STORAGE"latest.tar.gz" ] 
 then
     tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
