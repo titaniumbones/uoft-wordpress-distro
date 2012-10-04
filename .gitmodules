@@ -8,3 +8,6 @@
 [submodule "wp-content/themes/twentyten-hh-child"]
 	path = wp-content/themes/twentyten-hh-child
 	url = https://github.com/titaniumbones/twentyten-hh-child.git
+[submodule "wp-content/themes/wordpress-learning-theme"]
+	path = wp-content/themes/wordpress-learning-theme
+	url =  https://github.com/titaniumbones/uoft-wordpress-distro.git
