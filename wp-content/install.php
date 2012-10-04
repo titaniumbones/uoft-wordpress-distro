@@ -548,7 +548,7 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
           prdebug("found it SECOND TIME" . $cctmdefspath);
           // CCTM_ImportExport::activate_def($CCTMDEFS);
           prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historydepartmentjune2012.cctm.json');
+          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
         }
   }   
 
