@@ -4,7 +4,8 @@
   // I should write a sed script to do that, in fact
 
 function prdebug ($text) {
-  echo "<p>" . $text .'</p>';
+  //echo "<p>" . $text .'</p>';   
+  return
 }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
