@@ -4,14 +4,14 @@
   // I should write a sed script to do that, in fact
 
 function prdebug ($text) {
-  //echo "<p>" . $text .'</p>';   
-  return
+  echo "<p>" . $text .'</p>';   
+  //return
 }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
 
-
+// this wasn't working so I re-implemented in shell
 function matt_download_plugin($plugin) {
   $request = new StdClass();
   
