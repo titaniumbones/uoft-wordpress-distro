@@ -103,6 +103,8 @@ function wp_install_defaults($user_id) {
   } else {
     prdebug("had to load manually for some reason");
     $CCTMDEFS='historydepartmentjune2012.cctm.json';
+    $CCTMDEFS='historicalimagesoct2012.cctm.json';
+
     $PLUGINS=array(
                "custom-content-type-manager" => '0.9.6',
                "all-in-one-event-calendar" => '1.2.5',
@@ -451,7 +453,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
           prdebug("found it" . $cctmdefspath);
           // CCTM_ImportExport::activate_def($CCTMDEFS);
           prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historydepartmentjune2012.cctm.json');
+          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
         }
   }   
 
