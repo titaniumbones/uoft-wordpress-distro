@@ -38,10 +38,12 @@ fi
 # allow check for stored files during development
 # later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
-if [  -e $STORAGE ]
-then
-STORAGE=$PWD
-fi
+# if [  -e $STORAGE ]
+# then
+# echo "can't find storage"
+# sleep 2
+# STORAGE=$PWD
+# fi
 
 echo "looking for " 
 echo $STORAGE 
