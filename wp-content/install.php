@@ -597,11 +597,12 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
       prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
       $cctmdefspath = $uploads_info['basedir'] . "/cctm/defs/" . $CCTMDEFS;
       
+
         if (file_exists($cctmdefspath))
         {
           prdebug("found it SECOND TIME" . $cctmdefspath);
           // CCTM_ImportExport::activate_def($CCTMDEFS);
-          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
+          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);  
           //CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
           CCTM_ImportExport::activate_def($CCTMDEFS);
         }
