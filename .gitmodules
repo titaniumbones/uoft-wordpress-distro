@@ -7,4 +7,4 @@
 	url = https://github.com/titaniumbones/wordpress-learning-theme.git
 [submodule "wp-content/themes/twentytwelve-hh-child"]
 	path = wp-content/themes/twentytwelve-hh-child
-	url = git@github.com:titaniumbones/Twenty-Twelve-Child.git
+	url = https://github.com/titaniumbones/Twenty-Twelve-Child.git
