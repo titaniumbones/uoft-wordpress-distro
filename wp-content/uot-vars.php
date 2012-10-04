@@ -28,9 +28,14 @@ $PLUGINS=array(
                "smooth-slider" => '2.3.5',
                "tinymce-advanced" => '3.4.5.1',
                "wp-db-backup" => '2.2.2',
-	       "youtube-embed" => '2.5.6',
+	       "youtube-embed" => '2.5.6'
                );
 
+
+// same for themes
+$THEMES=array(
+              "twentytwelve" => '1.0'
+              );
 // cctm file
 $CCTMDEFS='historicalimagesoct2012.cctm.json';
 

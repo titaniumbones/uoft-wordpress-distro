@@ -55,7 +55,7 @@ else
 fi
 
 # fetch and unpack plugins
-cd $BASEDIR/wp-content/plugins
+cd $BASEDIR/wp-content/themes
 
 for plugin in $PLUGINS; do
     #plugin=`echo $plugin | sed 's/,/./g'`".zip"
@@ -74,6 +74,26 @@ for plugin in $PLUGINS; do
     fi
 done
 
+
+cd $BASEDIR/wp-content/themes
+
+for theme in $THEMES; do
+    #theme=`echo $theme | sed 's/,/./g'`".zip"
+    theme=${theme/,/.}".zip"
+    theme=${theme/../.}
+    echo "trying to install "$theme
+    sleep 2
+    if [ -e $STORAGE/$theme ]
+    then
+       unzip $STORAGE/$theme
+    else
+    #url="http://downloads.wordpress.org/theme/"$theme
+        wget -nd -P $STORAGE  http://wordpress.org/extend/themes/download/$theme
+        unzip $STORAGE/$theme 
+        # add this back in when I'm done testing
+        # rm $theme
+    fi
+done
 
 # next step: create wp-config.php
 cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php

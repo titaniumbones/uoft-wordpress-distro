@@ -37,16 +37,17 @@ function array_implode( $glue, $separator, $array ) {
 // and then pass to bash
   $OUTFILE="/tmp/uot-file";
 
-  function uot_vars_to_bash($array, $file) {
+function uot_vars_to_bash($title, $array, $file) {
     // open file
     $f = fopen($file, 'w');
     $pvalue=array_implode(',',"\n", $array);
     $filestring="#!/bin/bash" . "\n\n";
-    $filestring .= "PLUGINS=\"";
+    $filestring .= $title . "=\"";
     $filestring .= $pvalue . "\"\n";
-    $filestring .= "export PLUGINS\n";
+    $filestring .= "export " . $title ."\n";
     echo $filestring;
     fwrite($f,$filestring);
 }
 
-  uot_vars_to_bash($PLUGINS, $OUTFILE);
+uot_vars_to_bash("PLUGINS", $PLUGINS, $OUTFILE);
+uot_vars_to_bash("THEMES", $THEMES, $OUTFILE);
