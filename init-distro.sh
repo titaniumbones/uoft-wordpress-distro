@@ -46,9 +46,8 @@ STORAGE='/var/www/storage/'
 # fi
 
 echo "looking for " 
-echo $STORAGE 
-echo "latest.tar.gz"
-sleep 5
+echo $STORAGE "latest.tar.gz"
+sleep 2
 if [ -e $STORAGE"latest.tar.gz" ] 
 then
     tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
@@ -69,8 +68,8 @@ for plugin in $PLUGINS; do
        unzip $STORAGE/$plugin
     else
     #url="http://downloads.wordpress.org/plugin/"$plugin
-        wget -and -P $STORAGE  http://downloads.wordpress.org/plugin/$plugin
-        unzip $STORAGE$plugin 
+        wget -nd -P $STORAGE  http://downloads.wordpress.org/plugin/$plugin
+        unzip $STORAGE/$plugin 
         # add this back in when I'm done testing
         # rm $plugin
     fi
