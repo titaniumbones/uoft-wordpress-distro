@@ -39,7 +39,10 @@ fi
 # later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
 if [  -e $STORAGE ]
+then
 STORAGE=$PWD
+fi
+
 echo "looking for " 
 echo $STORAGE 
 echo "latest.tar.gz"
