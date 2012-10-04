@@ -5,7 +5,7 @@
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # pull in submodules
-# currently atahualpa-matts-mods, uot-helper-functions
+# currently twentytwelve, uot-helper-functions
 git submodule init
 git submodule update  --init --recursive
 
