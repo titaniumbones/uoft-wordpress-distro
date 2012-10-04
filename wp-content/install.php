@@ -3,6 +3,34 @@
   // set these defaults before proceeding!!
   // I should write a sed script to do that, in fact
 
+
+// some housekeeping that needs to happen no matter what
+  /** use this file to set your variables, including both   **/
+  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
+    prdebug("uotvars exists");
+    require_once(ABSPATH . 'wp-content/uot-vars.php');
+      prdebug ("username is " . $USERNAME );
+
+  } else {
+    prdebug("had to load manually for some reason");
+    $CCTMDEFS='historydepartmentjune2012.cctm.json';
+    $CCTMDEFS='historicalimagesoct2012.cctm.json';
+
+    $PLUGINS=array(
+               "custom-content-type-manager" => '0.9.6',
+               "all-in-one-event-calendar" => '1.2.5',
+               );
+    $USERNAME='matt';
+    $USEREMAIL='moptop99@gmail.com';
+
+  }
+    // trying to fix an error 
+    require_once(ABSPATH . 'wp-load.php');
+    require_once(ABSPATH .'wp-admin/includes/plugin.php');
+
+
+
+
 function prdebug ($text) {
   echo "<p>" . $text .'</p>';   
   //return
@@ -10,6 +38,9 @@ function prdebug ($text) {
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
+
+
+
 
 // this wasn't working so I re-implemented in shell
 function matt_download_plugin($plugin) {
@@ -95,11 +126,11 @@ function wp_install_defaults($user_id) {
      * Customizing various options
      * thanks KIA
      **/
-  /** use this file to set your variables, including both   **/
   if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
     prdebug("uotvars exists");
-    include(ABSPATH . 'wp-content/uot-vars.php');
+    require_once(ABSPATH . 'wp-content/uot-vars.php');
       prdebug ("username is " . $USERNAME );
+      prdebug ("cctm defs is " . $CCTMDEFS );
 
   } else {
     prdebug("had to load manually for some reason");
@@ -454,7 +485,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
           prdebug("found it" . $cctmdefspath);
           // CCTM_ImportExport::activate_def($CCTMDEFS);
           prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
+          CCTM_ImportExport::activate_def($CCTMDEFS);
         }
   }   
 
@@ -533,11 +564,33 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
 
 	wp_new_blog_notification($blog_title, $guessurl, $user_id, ($email_password ? $user_password : __('The password you chose during the install.') ) );
 
-	wp_cache_flush();
+  /** use this file to set your variables, including both   **/
+  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
+    prdebug("uotvars exists");
+    require_once(ABSPATH . 'wp-content/uot-vars.php');
+      prdebug ("username is " . $USERNAME );
+
+  } else {
+    prdebug("had to load manually for some reason");
+    $CCTMDEFS='historydepartmentjune2012.cctm.json';
+    $CCTMDEFS='historicalimagesoct2012.cctm.json';
+
+    $PLUGINS=array(
+               "custom-content-type-manager" => '0.9.6',
+               "all-in-one-event-calendar" => '1.2.5',
+               );
+    $USERNAME='matt';
+    $USEREMAIL='moptop99@gmail.com';
+
+  }
+    // trying to fix an error 
+    require_once(ABSPATH . 'wp-load.php');
+    require_once(ABSPATH .'wp-admin/includes/plugin.php');
+
 
   // now we need to activate the CCT definitions at startup
   if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
-
+  
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
       $uploads_info = wp_upload_dir();
@@ -549,10 +602,12 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
           prdebug("found it SECOND TIME" . $cctmdefspath);
           // CCTM_ImportExport::activate_def($CCTMDEFS);
           prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
+          //CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
+          CCTM_ImportExport::activate_def($CCTMDEFS);
         }
   }   
 
+  // wp_cache_flush();
 
 	return array('url' => $guessurl, 'user_id' => $user_id, 'password' => $user_password, 'password_message' => $message);
 }

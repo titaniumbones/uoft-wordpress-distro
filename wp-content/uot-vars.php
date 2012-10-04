@@ -5,7 +5,7 @@
 
 // these set a default backdoor admin user
 // useful when creating student sites
-$USERNAME='matt';
+$USERNAME='mattprice';
 $USEREMAIL='moptop99@gmail.com';
 
 // here is an array of plugins w/ version to load
