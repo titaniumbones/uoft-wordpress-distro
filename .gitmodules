@@ -10,4 +10,4 @@
 	url = https://github.com/titaniumbones/twentyten-hh-child.git
 [submodule "wp-content/themes/wordpress-learning-theme"]
 	path = wp-content/themes/wordpress-learning-theme
-	url =  https://github.com/titaniumbones/wordpress-learning-theme.git
+	url = https://github.com/titaniumbones/wordpress-learning-theme.git
