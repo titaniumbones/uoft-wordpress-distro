@@ -40,7 +40,9 @@ fi
 STORAGE='/var/www/storage/'
 if [  -e $STORAGE ]
 STORAGE=$PWD
-echo "looking for " $STORAGE "latest.tar.gz"
+echo "looking for " 
+echo $STORAGE 
+echo "latest.tar.gz"
 sleep 5
 if [ -e $STORAGE"latest.tar.gz" ] 
 then
