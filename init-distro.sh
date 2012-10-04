@@ -41,7 +41,7 @@ STORAGE='/var/www/storage/'
 if [!  -e $STORAGE ]
 then
     echo "can't find storage"
-    sleep 2
+    sleep 1
     STORAGE=$PWD/
 fi
 
@@ -82,7 +82,7 @@ for theme in $THEMES; do
     theme=${theme/,/.}".zip"
     theme=${theme/../.}
     echo "trying to install "$theme
-    sleep 2
+    sleep 0
     if [ -e $STORAGE/$theme ]
     then
        unzip $STORAGE/$theme
