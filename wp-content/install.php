@@ -5,7 +5,7 @@
 
 function prdebug ($text) {
   // echo "<p>" . $text .'</p>';
-  return
+  echo "";
 }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
