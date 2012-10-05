@@ -3,85 +3,120 @@
   // set these defaults before proceeding!!
   // I should write a sed script to do that, in fact
 
+// stupid debug function that prints a msg, but can 
+// be disabled all at once from here
 function prdebug ($text) {
-  // echo "<p>" . $text .'</p>';
+  echo "<p>" . $text .'</p>';
   echo "";
 }
 
-    // trying to fix an error 
-    require_once(ABSPATH . 'wp-load.php');
-    require_once(ABSPATH .'wp-admin/includes/plugin.php');
 
+// this function activates plugins somewhat more carefully than I would
+// have figured out on my own
+function run_activate_plugin( $plugin ) {
+  $current = get_option( 'active_plugins' );
+  $plugin = plugin_basename( trim( $plugin ) );
+  $current[] = $plugin;
+  sort( $current );
+  do_action( 'activate_plugin', trim( $plugin ) );
+  update_option( 'active_plugins', $current );
+  do_action( 'activate_' . trim( $plugin ) );
+  do_action( 'activated_plugin', trim( $plugin) );
+}
+  
+// this code, stolen from wp-admin/includes/plugin.php get_plugins
+// should help to identify the main plugin file in each plugin
+function get_plugin_file( $plugin ) {
+  $plugin_dir = @ opendir (WP_PLUGIN_DIR . '/' . $plugin );
+  if (  $plugin_dir ) {
+    while (($file = readdir ( $plugin_dir ) ) !== false ) {
+      if ( substr($file, 0, 1) == '.' )
+        continue;
+      if ( substr($file, -4) == '.php' ) {
+        prdebug("checking plugin data for " . $file );
+        $plugin_data = get_plugin_data( WP_PLUGIN_DIR . "/$plugin/$file", false, false ); 
+        if ( ! empty ($plugin_data['Name'] ) ) {
+          prdebug ( "<p>returning plugin file as " . $plugin . '/' . $file . "</p>");
+          return ($plugin . '/' . $file );
+        }
+      }
+    }
+    closedir( $plugin_dir );
+  }
+}
 
+/* Downloads a plugin, which is passed as a parameter.  
+ * Works fine but does not permit the choosing of a 
+ * version parameter */
 function matt_download_plugin($plugin) {
-  /* $request = new StdClass();
-   * 
-   * $request->slug = stripslashes($plugin);
-   * $post_data = array(
-   *                    'action' => 'plugin_information', 
-   *                    'request' => serialize($request)
-   *                    );
-   * $options = array(
-   *                  CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
-   *                  CURLOPT_POST => true,
-   *                  CURLOPT_POSTFIELDS => $post_data,
-   *                  CURLOPT_RETURNTRANSFER => true
-   *                  );
-   * $handle = curl_init();
-   * curl_setopt_array($handle, $options);
-   * $response = curl_exec($handle);
-   * curl_close($handle);
-   * $plugin_info = unserialize($response);
-   * echo "Downloading and Extracting $plugin_info->name<br />";
-   * //prdebug("plugin info is " .  print_r($plugin_info));
-   * //prdebug("download link is  " . $plugin_info->download_link);
-   * 
-   * $file = basename($plugin_info->download_link);
-   * 
-   * $fp = fopen($file,'w');
-   * 
-   * $ch = curl_init();
-   * curl_setopt($ch, CURLOPT_USERAGENT, 'WPKGR');
-   * curl_setopt($ch, CURLOPT_URL, $plugin_info->download_link);
-   * curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
-   * curl_setopt($ch, CURLOPT_HEADER, 0);
-   * @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-   * curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-   * curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
-   * curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-   * curl_setopt($ch, CURLOPT_FILE, $fp);
-   * $b = curl_exec($ch);
-   * 
-   * if (!$b) {
-   *   $message = 'Download error: '. curl_error($ch) .', please try again';
-   *   curl_close($ch);
-   *   throw new Exception($message);
-   * }
-   * 
-   * fclose($fp);
-   * 
-   * if (!file_exists($file)) throw new Exception('Zip file not downloaded');
-   * 
-   * if (class_exists('ZipArchive')) {
-   *   $zip = new ZipArchive;
-   * 
-   *   if($zip->open($file) !== TRUE) throw new Exception('Unable to open Zip file');
-   * 
-   *   $zip->extractTo(ABSPATH . 'wp-content/plugins/');
-   * 
-   *   $zip->close();
-   * }
-   * else {
-   *   // try unix shell command
-   *   @shell_exec('unzip -d ../wp-content/plugins/ '. $file);
-   * }
-   * unlink($file);
-   * echo "<strong>Done!</strong><br />"; */
-  echo "Skipping downloads";
+
+  $request = new StdClass();
+  
+  $request->slug = stripslashes($plugin);
+  $post_data = array(
+                     'action' => 'plugin_information', 
+                     'request' => serialize($request)
+                     );
+  $options = array(
+                   CURLOPT_URL => 'http://api.wordpress.org/plugins/info/1.0/',
+                   CURLOPT_POST => true,
+                   CURLOPT_POSTFIELDS => $post_data,
+                   CURLOPT_RETURNTRANSFER => true
+                   );
+  $handle = curl_init();
+  curl_setopt_array($handle, $options);
+  $response = curl_exec($handle);
+  curl_close($handle);
+  $plugin_info = unserialize($response);
+  echo "Downloading and Extracting $plugin_info->name<br />";  
+  $file = basename($plugin_info->download_link);
+  $fp = fopen($file,'w');
+  
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_USERAGENT, 'WPKGR');
+  curl_setopt($ch, CURLOPT_URL, $plugin_info->download_link);
+  curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+  curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+  curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+  curl_setopt($ch, CURLOPT_FILE, $fp);
+  $b = curl_exec($ch);
+  
+  if (!$b) {
+    $message = 'Download error: '. curl_error($ch) .', please try again';
+    curl_close($ch);
+    throw new Exception($message);
+  }
+  
+  fclose($fp);
+  
+  if (!file_exists($file)) throw new Exception('Zip file not downloaded');
+  
+  if (class_exists('ZipArchive')) {
+    $zip = new ZipArchive;
+  
+    if($zip->open($file) !== TRUE) throw new Exception('Unable to open Zip file');
+  
+    $zip->extractTo(ABSPATH . 'wp-content/plugins/');
+  
+    $zip->close();
+  }
+  else {
+    // try unix shell command
+    @shell_exec('unzip -d ../wp-content/plugins/ '. $file);
+  }
+  unlink($file);
+  echo "<strong>Done!</strong><br />";
 }
 
 /**
  * Replaces the built-in wp_install_defaults from upgrades.php
+ * Some stuff needs to go here, other stuff goes in wp_install
+ * in particular, since this is called from wp_install
+ * any variables that are going to be included in 
+ * this variable should be defined/included in wp_install instead.
  *
  * Tweaked and rewritten to give more helpful default content
  * cf http://www.kathyisawesome.com/421/customizing-wordpress-install/
@@ -97,29 +132,18 @@ function wp_install_defaults($user_id) {
      * Customizing various options
      * thanks KIA
      **/
-  /** use this file to set your variables, including both   **/
-  if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
-    prdebug("uotvars exists");
-    include(ABSPATH . 'wp-content/uot-vars.php');
-      prdebug ("username is " . $USERNAME );
+    
+    // these global variables are set in uot-vars.php, which is included
+    // in wp_install.  rename to make them more manageable
+    $UOTUSERNAME = $GLOBALS['UOTUSERNAME'];
+    $UOTUSEREMAIL = $GLOBALS['UOTUSEREMAIL'];
+    $PLUGINS=$GLOBALS['PLUGINS'];
+    $THEMES=$GLOBALS['THEMES'];
+    $CCTMDEFS=$GLOBALS['CCTMDEFS'];
 
-  } else {
-    prdebug("had to load manually for some reason");
-    $CCTMDEFS='historydepartmentjune2012.cctm.json';
-    $CCTMDEFS='historicalimagesoct2012.cctm.json';
-
-    $PLUGINS=array(
-               "custom-content-type-manager" => '0.9.6',
-               "all-in-one-event-calendar" => '1.2.5',
-               );
-    $USERNAME='matt';
-    $USEREMAIL='moptop99@gmail.com';
-
-  }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
-
 
 
     // Set Timezone
@@ -127,9 +151,7 @@ function wp_install_defaults($user_id) {
 
     //$timezone = "America/New_York";
     $timezone = "America/Toronto";
-    //$timezone = "America/Denver";
-    //$timezone = "America/Los_Angeles";
- 
+    //$timezone = "America/Los_Angeles"; 
     update_option('timezone_string',$timezone);
  
     // Start of the Week
@@ -142,6 +164,7 @@ function wp_install_defaults($user_id) {
     update_option('default_post_edit_rows',40);
  
     // Update Ping Services -- not using this yet
+    // but for most people it's a good idea.
     // http://mrjimhudson.com/wordpress-update-services-use-a-larger-ping-list/
     if ( file_exists(WP_CONTENT_DIR . '/KIA-ping-list.txt') ) {
       $services = file_get_contents('KIA-ping-list.txt', true);
@@ -150,6 +173,7 @@ function wp_install_defaults($user_id) {
  
     // Update Comment Moderation List -- also not using this
     // http://perishablepress.com/wordpress-blacklist-characters/
+    // I find my spam is pretty well managed by akismet as of now
     if ( file_exists(WP_CONTENT_DIR . '/KIA-comment-moderation-list.txt') ) {
       $modlist = file_get_contents('KIA-comment-moderation-list.txt', true);
       update_option('moderation_keys',$modlist);
@@ -181,16 +205,16 @@ function wp_install_defaults($user_id) {
     $cat_slug = sanitize_title(_x('General', 'Default category slug'));
  
     /*
-     * Create Self as Admin User. If the user already exists, the user tables are
+     * Create Developer as Admin User. If the user already exists, the user tables are
      * being shared among blogs. Just set the role in that case.
      */
-    // only do this if we have a USERNAME set
+    // only do this if we have a UOTUSERNAME set
     // some kind of syntax error here, fix later
-    if (isset($USERNAME)) {
-        $self_id = username_exists($USERNAME);
+    if (isset($UOTUSERNAME)) {
+        $self_id = username_exists($UOTUSERNAME);
         if ( !$self_id ) {
           $user_password = wp_generate_password( 12, false );
-          $self_id = wp_create_user($USERNAME, $user_password, $USEREMAIL);
+          $self_id = wp_create_user($UOTUSERNAME, $user_password, $UOTUSEREMAIL);
           update_user_option($self_id, 'default_password_nag', true, true);
           wp_new_user_notification( $self_id, $self_password );
         }
@@ -201,12 +225,7 @@ function wp_install_defaults($user_id) {
     /*
      * END TWEAKS
      */
- 
-	// Default category
-	$cat_name = __('Uncategorized');
-	/* translators: Default category slug */
-	$cat_slug = sanitize_title(_x('Uncategorized', 'Default category slug'));
-
+    // this adds the category name from above to the list
 	if ( global_terms_enabled() ) {
 		$cat_id = $wpdb->get_var( $wpdb->prepare( "SELECT cat_ID FROM {$wpdb->sitecategories} WHERE category_nicename = %s", $cat_slug ) );
 		if ( $cat_id == null ) {
@@ -223,9 +242,11 @@ function wp_install_defaults($user_id) {
 	$cat_tt_id = $wpdb->insert_id;
 
 	// Default link category
-	$cat_name = __('Blogroll');
+    // I don't want this on most of my blogs
+    // but I'm not sure things will work if I just leave it at null
+	$cat_name = __('Blogs');
 	/* translators: Default link category slug */
-	$cat_slug = sanitize_title(_x('Blogroll', 'Default link category slug'));
+	$cat_slug = sanitize_title(_x('', 'Default link category slug'));
 
 	if ( global_terms_enabled() ) {
 		$blogroll_id = $wpdb->get_var( $wpdb->prepare( "SELECT cat_ID FROM {$wpdb->sitecategories} WHERE category_nicename = %s", $cat_slug ) );
@@ -243,6 +264,7 @@ function wp_install_defaults($user_id) {
 	$blogroll_tt_id = $wpdb->insert_id;
 
 	// Now drop in some default links
+    // I bet there are better ones actually
 	$default_links = array();
 	$default_links[] = array(	'link_url' => __( 'http://codex.wordpress.org/' ),
 								'link_name' => __( 'Documentation' ),
@@ -292,9 +314,9 @@ function wp_install_defaults($user_id) {
 								'post_date_gmt' => $now_gmt,
 								'post_content' => $first_post,
 								'post_excerpt' => '',
-								'post_title' => __('Hello world!'),
+								'post_title' => __('Welcome to Wordpress!'),
 								/* translators: Default post slug */
-								'post_name' => sanitize_title( _x('hello-world', 'Default post slug') ),
+								'post_name' => sanitize_title( _x('welcome-to-wordpress', 'Default post slug') ),
 								'post_modified' => $now,
 								'post_modified_gmt' => $now_gmt,
 								'guid' => $first_post_guid,
@@ -306,7 +328,7 @@ function wp_install_defaults($user_id) {
 	$wpdb->insert( $wpdb->term_relationships, array('term_taxonomy_id' => $cat_tt_id, 'object_id' => 1) );
 
 	// Default comment
-	$first_comment_author = __('Mr WordPress');
+	$first_comment_author = __('WordPress Automaton');
 	$first_comment_url = 'http://wordpress.org/';
 	$first_comment = __('Hi, this is a comment.<br />To delete a comment, just log in and view the post&#039;s comments. There you will have the option to edit or delete them.');
 	if ( is_multisite() ) {
@@ -335,28 +357,29 @@ function wp_install_defaults($user_id) {
 
 As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to delete this page and create new pages for your content. Have fun!" ), admin_url() );
 	if ( is_multisite() )
-		$first_page = get_site_option( 'first_page', $first_page );
+      $first_page = get_site_option( 'first_page', $first_page );
 	$first_post_guid = get_option('home') . '/?page_id=2';
 	$wpdb->insert( $wpdb->posts, array(
-								'post_author' => $user_id,
-								'post_date' => $now,
-								'post_date_gmt' => $now_gmt,
-								'post_content' => $first_page,
-								'post_excerpt' => '',
-								'post_title' => __( 'Sample Page' ),
-								/* translators: Default page slug */
-								'post_name' => __( 'sample-page' ),
-								'post_modified' => $now,
-								'post_modified_gmt' => $now_gmt,
-								'guid' => $first_post_guid,
-								'post_type' => 'page',
-								'to_ping' => '',
-								'pinged' => '',
-								'post_content_filtered' => ''
-								));
+                                       'post_author' => $user_id,
+                                       'post_date' => $now,
+                                       'post_date_gmt' => $now_gmt,
+                                       'post_content' => $first_page,
+                                       'post_excerpt' => '',
+                                       'post_title' => __( 'Sample Page' ),
+                                       /* translators: Default page slug */
+                                       'post_name' => __( 'sample-page' ),
+                                       'post_modified' => $now,
+                                       'post_modified_gmt' => $now_gmt,
+                                       'guid' => $first_post_guid,
+                                       'post_type' => 'page',
+                                       'to_ping' => '',
+                                       'pinged' => '',
+                                       'post_content_filtered' => ''
+                                       ));
 	$wpdb->insert( $wpdb->postmeta, array( 'post_id' => 2, 'meta_key' => '_wp_page_template', 'meta_value' => 'default' ) );
 
 	// Set up default widgets for default theme.
+    // There's no reason this can't be set to something more interesting
 	update_option( 'widget_search', array ( 2 => array ( 'title' => '' ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-posts', array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
 	update_option( 'widget_recent-comments', array ( 2 => array ( 'title' => '', 'number' => 5 ), '_multiwidget' => 1 ) );
@@ -366,105 +389,49 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
 	update_option( 'sidebars_widgets', array ( 'wp_inactive_widgets' => array ( ), 'sidebar-1' => array ( 0 => 'search-2', 1 => 'recent-posts-2', 2 => 'recent-comments-2', 3 => 'archives-2', 4 => 'categories-2', 5 => 'meta-2', ), 'sidebar-2' => array ( ), 'sidebar-3' => array ( ), 'sidebar-4' => array ( ), 'sidebar-5' => array ( ), 'array_version' => 3 ) );
 
 	if ( ! is_multisite() )
-		update_user_meta( $user_id, 'show_welcome_panel', 1 );
+      update_user_meta( $user_id, 'show_welcome_panel', 1 );
 	elseif ( ! is_super_admin( $user_id ) && ! metadata_exists( 'user', $user_id, 'show_welcome_panel' ) )
-		update_user_meta( $user_id, 'show_welcome_panel', 2 );
+      update_user_meta( $user_id, 'show_welcome_panel', 2 );
 
 	if ( is_multisite() ) {
-		// Flush rules to pick up the new page.
-		$wp_rewrite->init();
-		$wp_rewrite->flush_rules();
+      // Flush rules to pick up the new page.
+      $wp_rewrite->init();
+      $wp_rewrite->flush_rules();
 
-		$user = new WP_User($user_id);
-		$wpdb->update( $wpdb->options, array('option_value' => $user->user_email), array('option_name' => 'admin_email') );
+      $user = new WP_User($user_id);
+      $wpdb->update( $wpdb->options, array('option_value' => $user->user_email), array('option_name' => 'admin_email') );
 
-		// Remove all perms except for the login user.
-		$wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'user_level') );
-		$wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'capabilities') );
+      // Remove all perms except for the login user.
+      $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'user_level') );
+      $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE user_id != %d AND meta_key = %s", $user_id, $table_prefix.'capabilities') );
 
-		// Delete any caps that snuck into the previously active blog. (Hardcoded to blog 1 for now.) TODO: Get previous_blog_id.
-		if ( !is_super_admin( $user_id ) && $user_id != 1 ) {
-			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id , 'meta_key' => $wpdb->base_prefix.'1_capabilities' ) );
-	}
-}
-  // more mods -- activate plugins
-  // this stuff stolen from wordpress package maker (see KIA post above)
-  // this function activates plugins somewhat more carefully than I would
-  function run_activate_plugin( $plugin ) {
-    $current = get_option( 'active_plugins' );
-    $plugin = plugin_basename( trim( $plugin ) );
-    $current[] = $plugin;
-    sort( $current );
-    do_action( 'activate_plugin', trim( $plugin ) );
-    update_option( 'active_plugins', $current );
-    do_action( 'activate_' . trim( $plugin ) );
-    do_action( 'activated_plugin', trim( $plugin) );
-  }
-  
-  // this code, stolen from wp-admin/includes/plugin.php get_plugins
-  // should help to identify the main plugin file in each plugin
-  function get_plugin_file( $plugin ) {
-    $plugin_dir = @ opendir (WP_PLUGIN_DIR . '/' . $plugin );
-    //prdebug("plugin dir is " . WP_PLUGIN_DIR . '/' . $plugin ); 
-    if (  $plugin_dir ) {
-      while (($file = readdir ( $plugin_dir ) ) !== false ) {
-        //prdebug("checking file  " . $file); 
-
-        if ( substr($file, 0, 1) == '.' )
-          continue;
-        if ( substr($file, -4) == '.php' ) {
-          prdebug("checking plugin data for " . $file );
-          $plugin_data = get_plugin_data( WP_PLUGIN_DIR . "/$plugin/$file", false, false ); 
-          //prdebug("plug data returns " . print_r ($plugin_data) );
-          if ( ! empty ($plugin_data['Name'] ) ) {
-            prdebug ( "<p>returning plugin file as " . $plugin . '/' . $file . "</p>");
-            return ($plugin . '/' . $file );
-          }
-        }
+      // Delete any caps that snuck into the previously active blog. (Hardcoded to blog 1 for now.) TODO: Get previous_blog_id.
+      if ( !is_super_admin( $user_id ) && $user_id != 1 ) {
+        $wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id , 'meta_key' => $wpdb->base_prefix.'1_capabilities' ) );
       }
-      closedir( $plugin_dir );
     }
 
-        
-  }
-  /* $PLUGINS=array(
-   *              "custom-content-type-manager" => '0.9.6',
-   *              "all-in-one-event-calendar" => '1.2.5',
-   *              ); */
-
-  foreach ($PLUGINS as $plugin => $version) {
-    prdebug ( "made it into the plugin loop for " . $plugin );
-    matt_download_plugin($plugin);
-    $plugin_file = get_plugin_file ($plugin);
-    if (! empty ($plugin_file) ) {
-      run_activate_plugin($plugin_file);
-    }
-  }
-
-
-  // now we need to activate the CCT definitions at startup
-  if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
-
-      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
-      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
-      $uploads_info = wp_upload_dir();
-      // prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
-      $cctmdefspath = $uploads_info['basedir'] . "/cctm/defs/" . $CCTMDEFS;
-      
-        if (file_exists($cctmdefspath))
-        {
-          prdebug("found it" . $cctmdefspath);
-          // CCTM_ImportExport::activate_def($CCTMDEFS);
-          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
-        }
-  }   
-
-  // and another one to activate uoft, after checking that cctm is active
-  if (is_plugin_active('custom-content-type-manager/index.php') and file_exists('uoft-helper-functions/uoft-helper-functions.php') ) {
-    run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php');
+    // more mods -- activate plugins
+    // this stuff stolen from wordpress package maker (see KIA post above)
+ 
+    foreach ($PLUGINS as $plugin => $version) {
+      prdebug ( "made it into the plugin loop for " . $plugin );
+      // we're currently downloading the plugin 
+      // using init_distro as it allows us to specify a 
+      // plugin version number.  but feel free to 
+      // uncomment.  
+      // matt_download_plugin($plugin);
+      $plugin_file = get_plugin_file ($plugin);
+      if (! empty ($plugin_file) ) {
+        run_activate_plugin($plugin_file);
       }
+    }
 
+    // and another one to activate non-wordpress.org-registered plugins
+    // after checking that cctm is active
+    if (is_plugin_active('custom-content-type-manager/index.php') and file_exists(ABSPATH . 'wp-content/plugins/uoft-helper-functions/uoft-helper-functions.php') ) {
+      run_activate_plugin('uoft-helper-functions/uoft-helper-functions.php');
+    }
 }
 
 
@@ -529,6 +496,29 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
 	$user = new WP_User($user_id);
 	$user->set_role('administrator');
 
+    // we'll need the plugin functions to be available
+    require_once(ABSPATH . 'wp-load.php');
+    require_once(ABSPATH .'wp-admin/includes/plugin.php');
+
+
+    /** use this file to set your variables; but this should actually be done in wp_install instead!   **/
+    if (file_exists(ABSPATH . 'wp-content/uot-vars.php') ) {
+      prdebug("uotvars exists");
+      include(ABSPATH . 'wp-content/uot-vars.php');
+      prdebug ("username is " . $UOTUSERNAME );
+
+    } else {
+      prdebug("had to load manually for some reason");
+      $CCTMDEFS='historicalimagesoct2012.cctm.json';
+      $PLUGINS=array(
+                     "custom-content-type-manager" => '0.9.6'
+                     );
+      $UOTUSERNAME='mattprice';
+      $UOTUSEREMAIL='moptop99@gmail.com';
+
+    }
+
+
 	wp_install_defaults($user_id);
 
 	flush_rewrite_rules();
@@ -539,8 +529,8 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
 
   // now we need to activate the CCT definitions at startup
   if (file_exists(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php') ) {
-
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
+      require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM.php');
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
       $uploads_info = wp_upload_dir();
       prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
@@ -548,13 +538,13 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
       
         if (file_exists($cctmdefspath))
         {
-          prdebug("found it SECOND TIME" . $cctmdefspath);
-          // CCTM_ImportExport::activate_def($CCTMDEFS);
-          prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
-          CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
+          prdebug("CCTM definitions file exists: " . $cctmdefspath);
+          $importattempt = CCTM_ImportExport::activate_def($CCTMDEFS);
+          if ($importattempt == false )  {
+            prdebug("import failed with an error ");
+          } 
         }                                    
-  }                             
-
+  }
 
 	return array('url' => $guessurl, 'user_id' => $user_id, 'password' => $user_password, 'password_message' => $message);
 }

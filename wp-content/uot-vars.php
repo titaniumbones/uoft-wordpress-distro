@@ -5,8 +5,8 @@
 
 // these set a default backdoor admin user
 // useful when creating student sites
-$USERNAME='mattprice';
-$USEREMAIL='moptop99@gmail.com';
+$UOTUSERNAME ='mattprice';
+$UOTUSEREMAIL='moptop99@gmail.com';
 
 // here is an array of plugins w/ version to load
 $PLUGINS=array(
@@ -39,3 +39,8 @@ $THEMES=array(
 // cctm file
 $CCTMDEFS='historicalimagesoct2012.cctm.json';
 
+$GLOBALS['UOTUSERNAME'] = $UOTUSERNAME;
+$GLOBALS['UOTUSEREMAIL'] = $UOTUSEREMAIL;
+$GLOBALS['PLUGINS'] = $PLUGINS;
+$GLOBALS['THEMES'] = $THEMES;
+$GLOBALS['CCTMDEFS'] = $CCTMDEFS;
