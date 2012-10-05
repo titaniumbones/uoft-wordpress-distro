@@ -74,7 +74,8 @@ for plugin in $PLUGINS; do
     fi
 done
 
-
+echo "done with plugins"
+sleep 3
 cd $BASEDIR/wp-content/themes
 
 for theme in $THEMES; do
