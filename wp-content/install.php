@@ -6,7 +6,7 @@
 // stupid debug function that prints a msg, but can 
 // be disabled all at once from here
 function prdebug ($text) {
-  echo "<p>" . $text .'</p>';
+  //echo "<p>" . $text .'</p>';
   echo "";
 }
 

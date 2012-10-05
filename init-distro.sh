@@ -9,7 +9,6 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 git submodule init
 git submodule update  --init --recursive
 
-
 # initialize list of plugins for later use
 # this is a quasi-two-dimensional array that
 # stores the name and version number in 
@@ -17,7 +16,6 @@ git submodule update  --init --recursive
 # from wordpress.org
 # really we only use it to find a tarball
 # but in install.php that list is fed to wordpress itself.
-
 TRANS="$BASEDIR/var-translator.php"
 if [ -e "$TRANS" ]
 then
@@ -32,18 +30,18 @@ fi
 
 # fetch and unpack wordpress
 # currently fetching latest
-# which is 3.4.1 in july 2012.  May want to revert to this
+# May want to revert to this
 # earlier version if things start breaking later on
 
 # allow check for stored files during development
 # later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
-# if [ !  -e $STORAGE ]
-# then
-#     echo "can't find storage"
-#     sleep 1
-#     STORAGE=$PWD/
-# fi
+if [ !  -e $STORAGE ]
+then
+    echo "can't find storage"
+    sleep 1
+    STORAGE=$PWD/
+fi
 
 echo "looking for "$STORAGE"latest.tar.gz"
 if [ -e $STORAGE"latest.tar.gz" ] 
@@ -56,7 +54,7 @@ fi
 
 # fetch and unpack plugins
 cd $BASEDIR/wp-content/plugins
-echo "gonna do these plugins $PLUGINS"
+echo "gonna do these plugins: $PLUGINS"
 for plugin in $PLUGINS; do
     #plugin=`echo $plugin | sed 's/,/./g'`".zip"
     plugin=${plugin/,/.}".zip"
@@ -75,10 +73,11 @@ for plugin in $PLUGINS; do
 done
 
 echo "done with plugins"
-sleep 3
+sleep 1.5
 
+# now get the themes
+echo "fetching and unpacking themes: $THEMES"
 cd $BASEDIR/wp-content/themes
-
 for theme in $THEMES; do
     #theme=`echo $theme | sed 's/,/./g'`".zip"
     theme=${theme/,/.}".zip"
@@ -96,8 +95,9 @@ for theme in $THEMES; do
         # rm $theme
     fi
 done
+echo "done with themes"
 
-# next step: create wp-config.php
+# now create wp-config.php
 cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
 
 # then, magic from stackexchange
@@ -106,9 +106,4 @@ cp $BASEDIR/wp-config-sample.php $BASEDIR/wp-config.php
 SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
 STRING='put your unique phrase here'
 printf '%s\n' "g/$STRING/d" a "$SALT" . w | ed -s $BASEDIR/wp-config.php
-
-# a fix for a different problem -- gonna getrid of these.
-# echo -e "define('WP_SITEURL', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
-# echo -e "define('WP_HOME', 'http://testwp.hackinghistory.ca/');\n" >> $BASEDIR/wp-config.php
-
 
