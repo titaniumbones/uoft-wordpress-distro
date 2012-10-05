@@ -77,7 +77,7 @@ function matt_download_plugin($plugin) {
    * }
    * unlink($file);
    * echo "<strong>Done!</strong><br />"; */
-  echo "Skipping downloads"
+  echo "Skipping downloads";
 }
 
 /**
