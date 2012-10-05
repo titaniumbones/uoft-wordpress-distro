@@ -7,6 +7,7 @@ function prdebug ($text) {
   // echo "<p>" . $text .'</p>';
   echo "";
 }
+
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
     require_once(ABSPATH .'wp-admin/includes/plugin.php');
