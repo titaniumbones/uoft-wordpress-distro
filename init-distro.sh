@@ -55,7 +55,7 @@ else
 fi
 
 # fetch and unpack plugins
-cd $BASEDIR/wp-content/themes
+cd $BASEDIR/wp-content/plugins
 echo "gonna do these plugins $PLUGINS"
 for plugin in $PLUGINS; do
     #plugin=`echo $plugin | sed 's/,/./g'`".zip"
