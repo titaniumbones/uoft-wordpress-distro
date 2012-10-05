@@ -4,7 +4,8 @@
   // I should write a sed script to do that, in fact
 
 function prdebug ($text) {
-  echo "<p>" . $text .'</p>';
+  // echo "<p>" . $text .'</p>';
+  return
 }
     // trying to fix an error 
     require_once(ABSPATH . 'wp-load.php');
@@ -549,8 +550,8 @@ function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated 
           // CCTM_ImportExport::activate_def($CCTMDEFS);
           prdebug("trying with a random string even though cctm is set to " . $CCTMDEFS);
           CCTM_ImportExport::activate_def('historicalimagesoct2012.cctm.json');
-        }
-  }   
+        }                                    
+  }                             
 
 
 	return array('url' => $guessurl, 'user_id' => $user_id, 'password' => $user_password, 'password_message' => $message);
