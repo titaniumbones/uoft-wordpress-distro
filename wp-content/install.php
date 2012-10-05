@@ -34,7 +34,7 @@ function matt_download_plugin($plugin) {
   $plugin_info = unserialize($response);
   echo "Downloading and Extracting $plugin_info->name<br />";
   //prdebug("plugin info is " .  print_r($plugin_info));
-  prdebug("download link is  " . $plugin_info->download_link);
+  //prdebug("download link is  " . $plugin_info->download_link);
 
   $file = basename($plugin_info->download_link);
 
@@ -414,7 +414,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
         if ( substr($file, -4) == '.php' ) {
           prdebug("checking plugin data for " . $file );
           $plugin_data = get_plugin_data( WP_PLUGIN_DIR . "/$plugin/$file", false, false ); 
-          prdebug("plug data returns " . print_r ($plugin_data) );
+          //prdebug("plug data returns " . print_r ($plugin_data) );
           if ( ! empty ($plugin_data['Name'] ) ) {
             echo "<p>returning plugin file as " . $plugin . '/' . $file . "</p>";
             return ($plugin . '/' . $file );
@@ -447,7 +447,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/index.php');
       require_once(WP_PLUGIN_DIR . '/custom-content-type-manager/includes/CCTM_ImportExport.php');
       $uploads_info = wp_upload_dir();
-      prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
+      // prdebug("wp_uploads_dir basedir returns " . print_r($uploads_info) );
       $cctmdefspath = $uploads_info['basedir'] . "/cctm/defs/" . $CCTMDEFS;
       
         if (file_exists($cctmdefspath))
