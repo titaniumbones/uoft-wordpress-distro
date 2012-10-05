@@ -417,7 +417,7 @@ As a new WordPress user, you should go to <a href=\"%s\">your dashboard</a> to d
           $plugin_data = get_plugin_data( WP_PLUGIN_DIR . "/$plugin/$file", false, false ); 
           //prdebug("plug data returns " . print_r ($plugin_data) );
           if ( ! empty ($plugin_data['Name'] ) ) {
-            predebug ( "<p>returning plugin file as " . $plugin . '/' . $file . "</p>");
+            prdebug ( "<p>returning plugin file as " . $plugin . '/' . $file . "</p>");
             return ($plugin . '/' . $file );
           }
         }
