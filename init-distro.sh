@@ -38,12 +38,12 @@ fi
 # allow check for stored files during development
 # later we'll get rid of these I guess
 STORAGE='/var/www/storage/'
-if [!  -e $STORAGE ]
-then
-    echo "can't find storage"
-    sleep 1
-    STORAGE=$PWD/
-fi
+# if [ !  -e $STORAGE ]
+# then
+#     echo "can't find storage"
+#     sleep 1
+#     STORAGE=$PWD/
+# fi
 
 echo "looking for "$STORAGE"latest.tar.gz"
 if [ -e $STORAGE"latest.tar.gz" ] 
