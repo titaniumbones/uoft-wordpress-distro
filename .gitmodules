@@ -1,7 +1,6 @@
 [submodule "wp-content/plugins/uoft-helper-functions"]
 	path = wp-content/plugins/uoft-helper-functions
-	#url = git@github.com:titaniumbones/uoft-helper-functions.git
-    url = https://github.com/titaniumbones/uoft-helper-functions.git
+	url = https://github.com/titaniumbones/uoft-helper-functions.git
 [submodule "wp-content/themes/wordpress-learning-theme"]
 	path = wp-content/themes/wordpress-learning-theme
 	url = https://github.com/titaniumbones/wordpress-learning-theme.git
@@ -14,21 +13,21 @@
 [submodule "wp-content/themes/required-starter"]
 	path = wp-content/themes/required-starter
 	url = https://github.com/wearerequired/required-starter.git
-[submodule "wp-content/themes/required-foundation-tooltip-shortcode"]
-	path = wp-content/plugins/required-foundation-tooltip-shortcode
+[submodule "wp-content/plugins/required-foundation-tooltip-shortcodes"]
+	path = wp-content/plugins/required-foundation-tooltip-shortcodes
 	url = https://github.com/wearerequired/required-foundation-tooltip-shortcode.git
-[submodule "wp-content/themes/required-foundation-alertbox-shortcode"]
-	path = wp-content/plugins/required-foundation-alertbox-shortcode
+[submodule "wp-content/plugins/required-foundation-alertbox-shortcodes"]
+	path = wp-content/plugins/required-foundation-alertbox-shortcodes
 	url = https://github.com/wearerequired/required-foundation-alertbox-shortcode.git
-[submodule "wp-content/themes/required-foundation-column-shortcode"]
-	path = wp-content/plugins/required-foundation-column-shortcode
+[submodule "wp-content/plugins/required-foundation-column-shortcodes"]
+	path = wp-content/plugins/required-foundation-column-shortcodes
 	url = https://github.com/wearerequired/required-foundation-column-shortcode.git
-[submodule "wp-content/themes/required-foundation-clearing-shortcode"]
-	path = wp-content/plugins/required-foundation-clearing-shortcode
+[submodule "wp-content/plugins/required-foundation-clearing-shortcodes"]
+	path = wp-content/plugins/required-foundation-clearing-shortcodes
 	url = https://github.com/wearerequired/required-foundation-clearing-shortcode.git
-[submodule "wp-content/themes/required-foundation-orbit-shortcode"]
-	path = wp-content/plugins/required-foundation-orbit-shortcode
+[submodule "wp-content/plugins/required-foundation-orbit-shortcodes"]
+	path = wp-content/plugins/required-foundation-orbit-shortcodes
 	url = https://github.com/wearerequired/required-foundation-orbit-shortcode.git
-[submodule "wp-content/themes/required-foundation-reveal-shortcode"]
-	path = wp-content/plugins/required-foundation-reveal-shortcode
+[submodule "wp-content/plugins/required-foundation-reveal-shortcodes"]
+	path = wp-content/plugins/required-foundation-reveal-shortcodes
 	url = https://github.com/wearerequired/required-foundation-reveal-shortcode.git
