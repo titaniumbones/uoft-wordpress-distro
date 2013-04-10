@@ -8,3 +8,27 @@
 [submodule "wp-content/themes/twentytwelve-hh-child"]
 	path = wp-content/themes/twentytwelve-hh-child
 	url = https://github.com/titaniumbones/Twenty-Twelve-Child.git
+[submodule "wp-content/themes/required-foundation"]
+	path = wp-content/themes/required-foundation
+	url = https://github.com/wearerequired/required-foundation.git
+[submodule "wp-content/themes/required-starter"]
+	path = wp-content/themes/required-starter
+	url = https://github.com/wearerequired/required-starter.git
+[submodule "wp-content/themes/required-foundation-tooltip-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-tooltip-shortcode.git
+[submodule "wp-content/themes/required-foundation-alertbox-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-alertbox-shortcode.git
+[submodule "wp-content/themes/required-foundation-column-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-column-shortcode.git
+[submodule "wp-content/themes/required-foundation-clearing-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-clearing-shortcode.git
+[submodule "wp-content/themes/required-foundation-orbit-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-orbit-shortcode.git
+[submodule "wp-content/themes/required-foundation-reveal-shortcode"]
+	path = wp-content/plugins
+	url = https://github.com/wearerequired/required-foundation-reveal-shortcode.git
