@@ -62,7 +62,7 @@ for plugin in $PLUGINS; do
     echo $plugin
     if [ -e $STORAGE/$plugin ]
     then
-       unzip $STORAGE/$plugin
+       unzip -o $STORAGE/$plugin
     else
     #url="http://downloads.wordpress.org/plugin/"$plugin
         wget -nd -P $STORAGE  http://downloads.wordpress.org/plugin/$plugin
