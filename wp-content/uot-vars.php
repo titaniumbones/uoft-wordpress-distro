@@ -32,8 +32,7 @@ $PLUGINS=array(
 
 // same for themes
 $THEMES=array(
-              "twentytwelve" => '1.0'
-              );
+                          );
 // cctm file
 $CCTMDEFS='historicalimagesoct2012.cctm.json';
 
