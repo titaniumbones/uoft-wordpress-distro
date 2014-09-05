@@ -1,33 +1,12 @@
-[submodule "wp-content/plugins/uoft-helper-functions"]
-	path = wp-content/plugins/uoft-helper-functions
-	url = https://github.com/titaniumbones/uoft-helper-functions.git
 [submodule "wp-content/themes/wordpress-learning-theme"]
 	path = wp-content/themes/wordpress-learning-theme
 	url = https://github.com/titaniumbones/wordpress-learning-theme.git
 [submodule "wp-content/themes/twentytwelve-hh-child"]
 	path = wp-content/themes/twentytwelve-hh-child
 	url = https://github.com/titaniumbones/Twenty-Twelve-Child.git
-[submodule "wp-content/themes/required-foundation"]
-	path = wp-content/themes/required-foundation
-	url = https://github.com/wearerequired/required-foundation.git
-[submodule "wp-content/themes/required-starter"]
-	path = wp-content/themes/required-starter
-	url = https://github.com/wearerequired/required-starter.git
-[submodule "wp-content/plugins/required-foundation-tooltip-shortcodes"]
-	path = wp-content/plugins/required-foundation-tooltip-shortcodes
-	url = https://github.com/wearerequired/required-foundation-tooltip-shortcode.git
-[submodule "wp-content/plugins/required-foundation-alertbox-shortcodes"]
-	path = wp-content/plugins/required-foundation-alertbox-shortcodes
-	url = https://github.com/wearerequired/required-foundation-alertbox-shortcode.git
-[submodule "wp-content/plugins/required-foundation-column-shortcodes"]
-	path = wp-content/plugins/required-foundation-column-shortcodes
-	url = https://github.com/wearerequired/required-foundation-column-shortcode.git
-[submodule "wp-content/plugins/required-foundation-clearing-shortcodes"]
-	path = wp-content/plugins/required-foundation-clearing-shortcodes
-	url = https://github.com/wearerequired/required-foundation-clearing-shortcode.git
-[submodule "wp-content/plugins/required-foundation-orbit-shortcodes"]
-	path = wp-content/plugins/required-foundation-orbit-shortcodes
-	url = https://github.com/wearerequired/required-foundation-orbit-shortcode.git
-[submodule "wp-content/plugins/required-foundation-reveal-shortcodes"]
-	path = wp-content/plugins/required-foundation-reveal-shortcodes
-	url = https://github.com/wearerequired/required-foundation-reveal-shortcode.git
+[submodule "wp-content/themes/grunterie"]
+	path = wp-content/themes/grunterie
+	url = https://github.com/gpspake/grunterie.git
+[submodule "wp-content/themes/foundationpress"]
+	path = wp-content/themes/foundationpress
+	url = https://github.com/olefredrik/FoundationPress.git
