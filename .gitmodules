@@ -10,3 +10,6 @@
 [submodule "wp-content/themes/foundationpress"]
 	path = wp-content/themes/foundationpress
 	url = https://github.com/olefredrik/FoundationPress.git
+[submodule "wp-content/themes/JointsWP"]
+	path = wp-content/themes/JointsWP
+	url = https://github.com/JeremyEnglert/JointsWP.git

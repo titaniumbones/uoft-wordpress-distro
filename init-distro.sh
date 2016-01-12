@@ -44,10 +44,10 @@ then
 fi
 
 echo "looking for "$STORAGE"latest.tar.gz"
-if [ -e $STORAGE"latest.tar.gz" ] 
-then
-    tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
-else
+# if [ -e $STORAGE"latest.tar.gz" ] 
+# then
+#     tar  -xzvf  $STORAGE"latest.tar.gz" --strip=1 --show-transformed
+# else
     wget -nd -P $STORAGE  http://wordpress.org/latest.tar.gz
     tar  -xzvf  $STORAGE/latest.tar.gz --strip=1 --show-transformed
 fi
