@@ -50,7 +50,7 @@ echo "looking for "$STORAGE"latest.tar.gz"
 # else
     wget -nd -P $STORAGE  http://wordpress.org/latest.tar.gz
     tar  -xzvf  $STORAGE/latest.tar.gz --strip=1 --show-transformed
-fi
+# fi
 
 # fetch and unpack plugins
 cd $BASEDIR/wp-content/plugins
